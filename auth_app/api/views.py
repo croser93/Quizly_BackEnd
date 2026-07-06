@@ -1,12 +1,14 @@
 from rest_framework.views import APIView
+from rest_framework.permissions import  AllowAny
 from .serializer import RegisstrationSerializer
 from rest_framework.response import Response
 from rest_framework import status
 
 class RegistrationView(APIView):
+    permission_classes = [AllowAny]
     
     def post(self, request):
-        serializer = RegisstrationSerializer
+        serializer = RegisstrationSerializer(data=request.data)
 
         data = {}
         if serializer.is_valid():
@@ -18,4 +20,4 @@ class RegistrationView(APIView):
             }
         else:
             return Response(serializer.errors, status=400) 
-        return Response(data)
+        return Response({"detail": "User created successfully!"}, status=201)

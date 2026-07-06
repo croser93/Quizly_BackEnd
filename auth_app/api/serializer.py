@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 class RegisstrationSerializer(serializers.ModelSerializer):
 
+    confirmed_password = serializers.CharField(write_only=True)
     class Meta:
         model = User
         fields = ["username", "password", "confirmed_password", "email"]
@@ -14,12 +15,12 @@ class RegisstrationSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         username = self.validated_data['username']
         pw = self.validated_data['password']
-        confirmed_pw = self.validated_data['confirmed_password']
+        confirmed_password = self.validated_data['confirmed_password']
         email = self.validated_data['email']
 
         all_emails = User.objects.values_list('email', flat=True)
 
-        if pw != confirmed_pw:
+        if pw != confirmed_password:
             raise serializers.ValidationError({'error': 'password dont match' })
         
         if email in all_emails:
@@ -31,5 +32,5 @@ class RegisstrationSerializer(serializers.ModelSerializer):
         )
 
         account.set_password(pw)
-        account.save
+        account.save()
         return account
