@@ -21,3 +21,6 @@ class RegistrationView(APIView):
         else:
             return Response(serializer.errors, status=400) 
         return Response({"detail": "User created successfully!"}, status=201)
+    
+class LoginView(APIView):
+    pass
