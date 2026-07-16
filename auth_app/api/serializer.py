@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-
+from django.contrib.auth import authenticate
 class RegisstrationSerializer(serializers.ModelSerializer):
 
     confirmed_password = serializers.CharField(write_only=True)
@@ -34,3 +34,20 @@ class RegisstrationSerializer(serializers.ModelSerializer):
         account.set_password(pw)
         account.save()
         return account
+    
+class LoginSerializer(serializers.Serializer):
+
+    username = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'password']    
+    
+    def validate(self, data):
+        user = authenticate(username=data['username'], password=data['password'])
+
+        if(user):
+            return {'user': user}
+        else:
+            raise serializers.ValidationError({'error': 'wrong credentials'})

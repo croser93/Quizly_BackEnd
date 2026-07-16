@@ -20,6 +20,8 @@ class LoginTest(APITestCase):
         self.assertEqual(response.data['user']['id'], 1)
         self.assertEqual(response.data['user']['username'], 'testUser')
         self.assertEqual(response.data['user']['email'], 'test@gmx.de')
+        self.assertIn('refresh_token', response.cookies)
+        self.assertIn('access_token', response.cookies)
 
     def test_Login_Wrong_PW(self):
         url = reverse('login')

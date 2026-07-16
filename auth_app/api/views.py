@@ -1,9 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import  AllowAny
-from .serializer import RegisstrationSerializer
+from .serializer import RegisstrationSerializer, LoginSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class RegistrationView(APIView):
     permission_classes = [AllowAny]
@@ -27,9 +28,18 @@ class LoginView(APIView):
 
     def post(self, request):
         data = request.data
-        user = authenticate(request, username=data['username'], password=data['password'])
-        if(user):
-            return Response({'detail': 'Login successfully!', 'user': {'id':user.id, 'username': user.username, 'email': user.email}} ,status=200)
-        else :
-            return Response(status=401)
+        serializer = LoginSerializer(data=data)
+        if serializer.is_valid():
+                
+            user = serializer.validated_data['user']
+            token = RefreshToken.for_user(user)
+            refresh_token = str(token)
+            access_token = str(token.access_token)
+
+            response = Response({'detail': 'Login successfully!', 'user': {'id':user.id, 'username': user.username, 'email': user.email}} ,status=200)
+            response.set_cookie('refresh_token', refresh_token, httponly=True)
+            response.set_cookie('access_token', access_token, httponly=True)
+            return response
+        else:
+            return Response(serializer.errors, status=401)
     
