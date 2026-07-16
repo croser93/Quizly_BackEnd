@@ -3,6 +3,7 @@ from rest_framework.permissions import  AllowAny
 from .serializer import RegisstrationSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth import authenticate
 
 class RegistrationView(APIView):
     permission_classes = [AllowAny]
@@ -23,4 +24,12 @@ class RegistrationView(APIView):
         return Response({"detail": "User created successfully!"}, status=201)
     
 class LoginView(APIView):
-    pass
+
+    def post(self, request):
+        data = request.data
+        user = authenticate(request, username=data['username'], password=data['password'])
+        if(user):
+            return Response({'detail': 'Login successfully!', 'user': {'id':user.id, 'username': user.username, 'email': user.email}} ,status=200)
+        else :
+            return Response(status=401)
+    
