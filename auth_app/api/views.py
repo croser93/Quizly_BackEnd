@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import (TokenRefreshView)
 
 class RegistrationView(APIView):
     permission_classes = [AllowAny]
@@ -56,4 +57,20 @@ class LogoutView(APIView):
         response.delete_cookie("access_token")
         response.delete_cookie('refresh_token')
 
+        return response
+
+class RefreshCookieView(TokenRefreshView):
+    
+    def post(self, request):
+
+        refresh = request.COOKIES.get('refresh_token')
+
+        if refresh is None:
+            return Response({'detail':'Refresh Token ungültig oder fehlt.'}, status=status.HTTP_401_UNAUTHORIZED)
+        request.data['refresh'] = refresh
+        accsess = super().post(request)
+        accsess_token = accsess.data['access']
+
+        response = Response({'detail': 'Token refreshed'})
+        response.set_cookie('access_token', accsess_token, httponly=True)
         return response
