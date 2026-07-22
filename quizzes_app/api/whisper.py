@@ -1,6 +1,6 @@
 import whisper
 
-def transcript():
+def transcript(path):
     model = whisper.load_model("turbo")
-    result = model.transcribe("audio.mp3")
-    print(result["text"])
+    result = model.transcribe(path)
+    return result["text"]
