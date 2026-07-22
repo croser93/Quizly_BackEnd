@@ -6,6 +6,7 @@ from ..models import Quiz
 from .service import download_audio
 from .whisper import transcript
 from .gemini import gemini
+import json
 
 class QuizzesView(APIView):
 
@@ -14,10 +15,14 @@ class QuizzesView(APIView):
     def post(self, request):
             serializer = URLSerializer(data=request.data)
             if serializer.is_valid():
+
                 audio_path = download_audio(serializer.validated_data['url'])
                 transcr = transcript(audio_path)
-                gemini(transcr)
-                quiz = Quiz.objects.create(video_url=serializer.validated_data['url'], user=request.user, title="TODO", description="TODO")
+                quiz_json = gemini(transcr)
+                quiz_json = json.loads(quiz_json)
+
+                quiz = Quiz.objects.create(video_url=serializer.validated_data['url'], user=request.user, title=quiz_json['title'], description=quiz_json['description'])
+                print(quiz)
                 quiz_serializer = QuizSerializer(quiz)
                 return Response(quiz_serializer.data, status=201)
             else:

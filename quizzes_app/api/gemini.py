@@ -39,4 +39,4 @@ def gemini(transcript):
         model="gemini-3.1-flash-lite",
         input=build_prompt(transcript)
     )
-    print(interaction.output_text)
+    return(interaction.output_text)
