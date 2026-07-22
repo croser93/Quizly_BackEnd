@@ -3,7 +3,8 @@ from rest_framework.permissions import  IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-from .serializer import QuizSerializer
+from .serializer import QuizSerializer, URLSerializer
+from ..models import Quiz
 
 class QuizzesView(APIView):
 
@@ -12,9 +13,11 @@ class QuizzesView(APIView):
     def post(self, request):
 
         try:
-            serializer = QuizSerializer(data=request.data)
+            serializer = URLSerializer(data=request.data)
             if serializer.is_valid():
-                return Response(serializer.data, status=201)
+                quiz = Quiz.objects.create(video_url=serializer.validated_data['url'], user=request.user, title="TODO", description="TODO")
+                quiz_serializer = QuizSerializer(quiz)
+                return Response(quiz_serializer.data, status=201)
             else:
                 return Response({"error": "Ungültige URL oder Anfragedaten."}, status=400)
         except:
