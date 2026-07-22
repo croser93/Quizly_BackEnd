@@ -14,10 +14,9 @@ class QuizzesView(APIView):
     def post(self, request):
             serializer = URLSerializer(data=request.data)
             if serializer.is_valid():
-                # audio_path = download_audio(serializer.validated_data['url'])
-                # transcr = transcript(audio_path)
-                # print(transcr)
-                gemini()
+                audio_path = download_audio(serializer.validated_data['url'])
+                transcr = transcript(audio_path)
+                gemini(transcr)
                 quiz = Quiz.objects.create(video_url=serializer.validated_data['url'], user=request.user, title="TODO", description="TODO")
                 quiz_serializer = QuizSerializer(quiz)
                 return Response(quiz_serializer.data, status=201)
