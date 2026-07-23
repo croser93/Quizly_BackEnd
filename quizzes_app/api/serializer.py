@@ -5,7 +5,6 @@ from quizzes_app.models import Quiz, Question
 class URLSerializer (serializers.Serializer):
     url = serializers.URLField()
 class QuestionSerializer(serializers.ModelSerializer):
-     
     class Meta:
         model = Question
         fields = ['id','question_title','question_options','answer','created_at', 'updated_at']
