@@ -3,6 +3,11 @@ from quizzes_app.models import Quiz, Question
 
 
 class URLSerializer (serializers.Serializer):
+    """
+    Serializer for validating the submitted video URL.
+
+    url = the YouTube video URL to process
+    """
     url = serializers.URLField()
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,6 +16,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 
         
 class QuizSerializer(serializers.ModelSerializer):
+        """
+        Serializer for a Quiz and its related questions.
+
+        questions = from QuestionSerializer
+        """
 
         questions = QuestionSerializer(many=True, read_only=True)
         class Meta:

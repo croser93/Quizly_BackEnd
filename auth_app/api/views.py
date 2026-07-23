@@ -8,8 +8,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import (TokenRefreshView)
 
 class RegistrationView(APIView):
+    """
+    Register a new user account.
+
+    Endpoints:
+    - POST   /api/registration/ - Create a new user account
+    """
     permission_classes = [AllowAny]
-    
+
     def post(self, request):
         serializer = RegisstrationSerializer(data=request.data)
 
@@ -26,6 +32,12 @@ class RegistrationView(APIView):
         return Response({"detail": "User created successfully!"}, status=201)
     
 class LoginView(APIView):
+    """
+    Authenticate a user and set JWT auth cookies.
+
+    Endpoints:
+    - POST   /api/login/ - Log in and receive access/refresh token cookies
+    """
 
     def post(self, request):
         data = request.data
@@ -45,8 +57,14 @@ class LoginView(APIView):
             return Response(serializer.errors, status=401)
         
 class LogoutView(APIView):
+    """
+    Log out the authenticated user and invalidate their tokens.
+
+    Endpoints:
+    - POST   /api/logout/ - Blacklist the refresh token and clear auth cookies
+    """
     permission_classes = [IsAuthenticated]
-    
+
     def post(self, request):
     
         refresh = request.COOKIES.get('refresh_token')
@@ -60,7 +78,13 @@ class LogoutView(APIView):
         return response
 
 class RefreshCookieView(TokenRefreshView):
-    
+    """
+    Refresh the access token using the refresh token stored in cookies.
+
+    Endpoints:
+    - POST   /api/token/refresh/ - Issue a new access token cookie
+    """
+
     def post(self, request):
 
         refresh = request.COOKIES.get('refresh_token')

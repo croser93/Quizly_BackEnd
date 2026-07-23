@@ -2,6 +2,11 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 class RegisstrationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for registering a new user.
+
+    confirmed_password = write-only field used to confirm the password matches
+    """
 
     confirmed_password = serializers.CharField(write_only=True)
     class Meta:
@@ -36,6 +41,12 @@ class RegisstrationSerializer(serializers.ModelSerializer):
         return account
     
 class LoginSerializer(serializers.Serializer):
+    """
+    Serializer for user login.
+
+    username = write-only field containing the login username
+    password = write-only field containing the login password
+    """
 
     username = serializers.CharField(write_only=True)
     password = serializers.CharField(write_only=True)
