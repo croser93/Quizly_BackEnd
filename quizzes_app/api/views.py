@@ -10,6 +10,13 @@ from .gemini import gemini
 import json
 
 class QuizzesView(APIView):
+    """
+    Create and list quizzes for the authenticated user.
+
+    Endpoints:
+    - GET    /api/quizzes/ - List all quizzes belonging to the authenticated user
+    - POST   /api/quizzes/ - Create a new quiz from a YouTube URL
+    """
 
     permission_classes = [IsAuthenticated]
 
@@ -39,6 +46,14 @@ class QuizzesView(APIView):
         else:
             return Response({"error": "Ungültige URL oder Anfragedaten."}, status=400)
 class QuizzesDetailView(APIView):
+    """
+    Retrieve, update or delete a single quiz owned by the authenticated user.
+
+    Endpoints:
+    - GET    /api/quizzes/{ID}/ - Retrieve a single quiz
+    - PATCH  /api/quizzes/{ID}/ - Partially update a quiz
+    - DELETE /api/quizzes/{ID}/ - Delete a quiz
+    """
 
     permission_classes = [IsAuthenticated, UserIsCreatorOrAdmin]
 
