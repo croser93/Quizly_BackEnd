@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import  IsAuthenticated
 from rest_framework.response import Response
 from .serializer import QuizSerializer, URLSerializer
+from .permission import UserIsCreatorOrAdmin
 from ..models import Quiz, Question
 from .service import download_audio
 from .whisper import transcript
@@ -39,12 +40,13 @@ class QuizzesView(APIView):
             return Response({"error": "Ungültige URL oder Anfragedaten."}, status=400)
 class QuizzesDetailView(APIView):
 
-    permission_classes = [IsAuthenticated]
-    def get(self, request, pk):
+    permission_classes = [IsAuthenticated, UserIsCreatorOrAdmin]
 
-        try:
-            quiz = Quiz.objects.get(pk=pk)
-            serializer = QuizSerializer(quiz)
-            return Response(serializer.data)
-        except:
-            return Response ({"error": " Quiz nicht gefunden."}, status=404)
+    def get(self, request, pk):
+            try:
+                quiz = Quiz.objects.get(pk=pk)
+                self.check_object_permissions(request, quiz)
+                serializer = QuizSerializer(quiz)
+                return Response(serializer.data)
+            except Quiz.DoesNotExist:
+                return Response ({"error": "Quiz nicht gefunden."}, status=404)
