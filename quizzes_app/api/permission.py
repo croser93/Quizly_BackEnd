@@ -9,4 +9,4 @@ class UserIsCreatorOrAdmin(BasePermission):
         elif request.method =='PATCH':
             return bool(request.user and (request.user.is_superuser or request.user == obj.user))
         elif request.method =='DELETE':
-            return bool(request.user and request.user.is_superuser)
+            return bool(request.user and (request.user.is_superuser or request.user == obj.user))

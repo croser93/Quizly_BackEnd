@@ -47,6 +47,28 @@ class QuizzesDetailView(APIView):
                 quiz = Quiz.objects.get(pk=pk)
                 self.check_object_permissions(request, quiz)
                 serializer = QuizSerializer(quiz)
-                return Response(serializer.data)
+                return Response(serializer.data, status=200)
             except Quiz.DoesNotExist:
                 return Response ({"error": "Quiz nicht gefunden."}, status=404)
+
+    def patch (self, request, pk):
+        try:
+            quiz = Quiz.objects.get(pk=pk)
+            self.check_object_permissions(request, quiz)
+            serializer = QuizSerializer(quiz, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=200)
+            else:
+                return Response({"error": "Ungültige Anfragedaten."}, status=400)
+        except Quiz.DoesNotExist:
+            return Response ({"error": "Quiz nicht gefunden."}, status=404)
+
+    def delete(self, request, pk):
+        try:
+            quiz = Quiz.objects.get(pk=pk)
+            self.check_object_permissions(request, quiz)
+            quiz.delete()
+            return Response(status=204)
+        except Quiz.DoesNotExist:
+            return Response ({"error": "Quiz nicht gefunden."}, status=404)
