@@ -12,7 +12,7 @@ class QuizzesView(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def get(self, quest):
+    def get(self, request):
 
         quiz = Quiz.objects.all()
         serializer = QuizSerializer(quiz, many=True)
@@ -38,4 +38,13 @@ class QuizzesView(APIView):
         else:
             return Response({"error": "Ungültige URL oder Anfragedaten."}, status=400)
 class QuizzesDetailView(APIView):
-    pass
+
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+
+        try:
+            quiz = Quiz.objects.get(pk=pk)
+            serializer = QuizSerializer(quiz)
+            return Response(serializer.data)
+        except:
+            return Response ({"error": " Quiz nicht gefunden."}, status=404)
