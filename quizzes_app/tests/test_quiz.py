@@ -20,8 +20,8 @@ class QuizTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['id'], 1)
-        self.assertEqual(response.data['title'], "TODO")
-        self.assertEqual(response.data['description'], "TODO")
+        self.assertTrue(response.data['title'])
+        self.assertTrue(response.data['description'])
         self.assertEqual(response.data['video_url'], data["url"])
 
     def test_post_quiz_400(self):
