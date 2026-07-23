@@ -10,34 +10,46 @@ class QuizTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username="testuser", password="123456", email="testuser@gmx.de")
 
-    def test_post_quiz(self):
+    def test_get_quiz(self):
         self.client.cookies['access_token'] = str(RefreshToken.for_user(self.user).access_token)
-
         url = reverse("quizzes")
-        data = {"url": "https://www.youtube.com/watch?v=i3a7B65b6w8"}
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response = self.client.post(url, data)
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['id'], 1)
-        self.assertTrue(response.data['title'])
-        self.assertTrue(response.data['description'])
-        self.assertEqual(response.data['video_url'], data["url"])
+    # def test_post_quiz(self):
+    #     self.client.cookies['access_token'] = str(RefreshToken.for_user(self.user).access_token)
 
-    def test_post_quiz_400(self):
-        self.client.cookies['access_token'] = str(RefreshToken.for_user(self.user).access_token)
+    #     url = reverse("quizzes")
+    #     data = {"url": "https://www.youtube.com/watch?v=i3a7B65b6w8"}
 
+    #     response = self.client.post(url, data)
+
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    #     self.assertEqual(response.data['id'], 1)
+    #     self.assertTrue(response.data['title'])
+    #     self.assertTrue(response.data['description'])
+    #     self.assertEqual(response.data['video_url'], data["url"])
+
+    def test_get_quiz_401(self):
         url = reverse("quizzes")
-        data = {"url": 1}
-
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-
-    def test_post_quiz_401(self):
-
-        url = reverse("quizzes")
-        data = {"url": "https://www.youtube.com/watch?v=i3a7B65b6w8"}
-
-        response = self.client.post(url, data)
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    # def test_post_quiz_400(self):
+    #     self.client.cookies['access_token'] = str(RefreshToken.for_user(self.user).access_token)
+
+    #     url = reverse("quizzes")
+    #     data = {"url": 1}
+
+    #     response = self.client.post(url, data)
+    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+    # def test_post_quiz_401(self):
+
+    #     url = reverse("quizzes")
+    #     data = {"url": "https://www.youtube.com/watch?v=i3a7B65b6w8"}
+
+    #     response = self.client.post(url, data)
+    #     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

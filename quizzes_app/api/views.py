@@ -12,23 +12,30 @@ class QuizzesView(APIView):
 
     permission_classes = [IsAuthenticated]
 
+    def get(self, quest):
+
+        quiz = Quiz.objects.all()
+        serializer = QuizSerializer(quiz, many=True)
+        return Response(serializer.data)
+
+
     def post(self, request):
-            serializer = URLSerializer(data=request.data)
-            if serializer.is_valid():
+        serializer = URLSerializer(data=request.data)
+        if serializer.is_valid():
 
-                # audio_path = download_audio(serializer.validated_data['url'])
-                transcr = transcript("media/temp/i3a7B65b6w8.webm")
-                quiz_json = gemini(transcr)
-                quiz_json = json.loads(quiz_json)
+            # audio_path = download_audio(serializer.validated_data['url'])
+            transcr = transcript("media/temp/i3a7B65b6w8.webm")
+            quiz_json = gemini(transcr)
+            quiz_json = json.loads(quiz_json)
 
-                quiz = Quiz.objects.create(video_url=serializer.validated_data['url'], user=request.user, title=quiz_json['title'], description=quiz_json['description'])
+            quiz = Quiz.objects.create(video_url=serializer.validated_data['url'], user=request.user, title=quiz_json['title'], description=quiz_json['description'])
 
-                for element in quiz_json['questions']:
-                    question = Question.objects.create(quiz= quiz, question_title = element['question_title'], question_options = element['question_options'], answer = element['answer'])
-                quiz_serializer = QuizSerializer(quiz)
-                print(quiz_serializer.data)
-                return Response(quiz_serializer.data, status=201)
-            else:
-                return Response({"error": "Ungültige URL oder Anfragedaten."}, status=400)
+            for element in quiz_json['questions']:
+                question = Question.objects.create(quiz= quiz, question_title = element['question_title'], question_options = element['question_options'], answer = element['answer'])
+            quiz_serializer = QuizSerializer(quiz)
+            print(quiz_serializer.data)
+            return Response(quiz_serializer.data, status=201)
+        else:
+            return Response({"error": "Ungültige URL oder Anfragedaten."}, status=400)
 class QuizzesDetailView(APIView):
     pass
