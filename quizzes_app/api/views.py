@@ -31,8 +31,8 @@ class QuizzesView(APIView):
         serializer = URLSerializer(data=request.data)
         if serializer.is_valid():
 
-            # audio_path = download_audio(serializer.validated_data['url'])
-            transcr = transcript("media/temp/i3a7B65b6w8.webm")
+            audio_path = download_audio(serializer.validated_data['url'])
+            transcr = transcript(audio_path)
             quiz_json = gemini(transcr)
             quiz_json = json.loads(quiz_json)
 
