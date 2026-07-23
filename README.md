@@ -1,4 +1,4 @@
-[![Python](https://img.shields.io/badge/Python-3.12+-blue?style=for-the-badge&logo=python)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.14.4-blue?style=for-the-badge&logo=python)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/Django-6.0.6-092E20?style=for-the-badge&logo=django&labelColor=092E20)](https://www.djangoproject.com/)
 [![DRF](https://img.shields.io/badge/Django_REST_Framework-3.17.1-red?style=for-the-badge&logo=django)](https://www.django-rest-framework.org/)
 [![JWT](https://img.shields.io/badge/Auth-JWT-black?style=for-the-badge&logo=jsonwebtokens)](https://jwt.io/)
@@ -33,31 +33,50 @@ Quizly lets an authenticated user submit a YouTube URL and receive a ready-to-us
 ```bash
 # 1. Clone repository
 git clone https://github.com/croser93/Quizly_BackEnd.git
+```
 
+```bash
 # 2. Go to project
 cd Quizly_BackEnd
+```
 
+```bash
 # 3. Create virtual environment
 python -m venv .venv
+```
 
-# 4. Activate virtual environment
-# Linux/Mac:
+```bash
+# 4. Activate virtual environment — Linux/Mac
 source .venv/bin/activate
-# Windows:
-.venv\Scripts\activate
+```
 
+```bash
+# 4. Activate virtual environment — Windows
+.venv\Scripts\activate
+```
+
+```bash
 # 5. Install dependencies
 pip install -r requirements.txt
+```
 
-# 6. Create a .env file in the project root
-# and add your Gemini API key:
+```bash
+# 6. Create a .env file in the project root and add your Gemini API key
 # GEMINI_API_KEY=your_gemini_api_key_here
+```
 
-# 7. Apply migrations
+```bash
+# 7. Create migration files
 python manage.py makemigrations
-python manage.py migrate
+```
 
-# 8. Start development server
+```bash
+# 8. Run database migrations
+python manage.py migrate
+```
+
+```bash
+# 9. Start development server
 python manage.py runserver
 ```
 
