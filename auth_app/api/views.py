@@ -53,7 +53,7 @@ class LogoutView(APIView):
 
         token = RefreshToken(refresh)
         token.blacklist()
-        response = Response({"detail": "Erfolgreicher Logout"}, status=status.HTTP_200_OK)
+        response = Response({"detail": "Log-Out successfully! All Tokens will be deleted. Refresh token is now invalid."}, status=status.HTTP_200_OK)
         response.delete_cookie("access_token")
         response.delete_cookie('refresh_token')
 

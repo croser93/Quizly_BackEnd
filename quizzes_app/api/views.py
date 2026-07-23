@@ -15,7 +15,7 @@ class QuizzesView(APIView):
 
     def get(self, request):
 
-        quiz = Quiz.objects.all()
+        quiz = Quiz.objects.filter(user=request.user)
         serializer = QuizSerializer(quiz, many=True)
         return Response(serializer.data)
 
