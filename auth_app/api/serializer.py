@@ -23,12 +23,12 @@ class RegisstrationSerializer(serializers.ModelSerializer):
         confirmed_password = self.validated_data['confirmed_password']
         email = self.validated_data['email']
 
-        all_emails = User.objects.values_list('email', flat=True)
+        all_emails = User.objects.filter(email=email).exists()
 
         if pw != confirmed_password:
             raise serializers.ValidationError({'error': 'password dont match' })
         
-        if email in all_emails:
+        if all_emails:
             raise serializers.ValidationError({'error' : 'email exist'})
         
         account = User (
