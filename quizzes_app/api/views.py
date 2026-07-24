@@ -5,8 +5,6 @@ from .serializer import QuizSerializer, URLSerializer
 from .permission import UserIsCreatorOrAdmin
 from ..models import Quiz, Question
 from .service import download_audio, start_quiz_chain
-from .whisper import transcript
-from .gemini import gemini
 import json
 
 class QuizzesView(APIView):
@@ -48,7 +46,7 @@ class QuizzesView(APIView):
             print(quiz_serializer.data)
             return Response(quiz_serializer.data, status=201)
         else:
-            return Response({"error": "Ungültige URL oder Anfragedaten."}, status=400)
+            return Response({"error": "Invalid URL or request data."}, status=400)
         
 class QuizzesDetailView(APIView):
     """
@@ -69,7 +67,7 @@ class QuizzesDetailView(APIView):
                 serializer = QuizSerializer(quiz)
                 return Response(serializer.data, status=200)
             except Quiz.DoesNotExist:
-                return Response ({"error": "Quiz nicht gefunden."}, status=404)
+                return Response ({"error": "Quiz not found."}, status=404)
 
     def patch (self, request, pk):
         try:
@@ -80,9 +78,9 @@ class QuizzesDetailView(APIView):
                 serializer.save()
                 return Response(serializer.data, status=200)
             else:
-                return Response({"error": "Ungültige Anfragedaten."}, status=400)
+                return Response({"error": "Invalid request data."}, status=400)
         except Quiz.DoesNotExist:
-            return Response ({"error": "Quiz nicht gefunden."}, status=404)
+            return Response ({"error": "Quiz not found."}, status=404)
 
     def delete(self, request, pk):
         try:
@@ -91,4 +89,4 @@ class QuizzesDetailView(APIView):
             quiz.delete()
             return Response(status=204)
         except Quiz.DoesNotExist:
-            return Response ({"error": "Quiz nicht gefunden."}, status=404)
+            return Response ({"error": "Quiz not found."}, status=404)

@@ -90,7 +90,7 @@ class RefreshCookieView(TokenRefreshView):
         refresh = request.COOKIES.get('refresh_token')
 
         if refresh is None:
-            return Response({'detail':'Refresh Token ungültig oder fehlt.'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'detail':'Refresh token invalid or missing.'}, status=status.HTTP_401_UNAUTHORIZED)
         request.data['refresh'] = refresh
         accsess = super().post(request)
         accsess_token = accsess.data['access']
