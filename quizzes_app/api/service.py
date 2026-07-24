@@ -21,14 +21,16 @@ def download_audio(url):
         return ydl.prepare_filename(info)
 
 def start_quiz_chain(audio_path):
-    try:
-        transcr = transcript(audio_path)
-    except Exception:
-        raise Exception("Transcription failed")   
+    """
+    Transcribe the audio at audio_path and generate a quiz from it.
+
+    audio_path = local path to the downloaded audio file
+    transcr = text transcript of the audio, produced by transcript()
+    from_gemin_json = raw JSON string produced by gemini(), built from transcr
+    returns = from_gemin_json (title, description, questions)
+    """
     
-    try:
-        from_gemin_json = gemini(transcr)
-    except Exception:
-        raise Exception("Gemini request failed")   
+    transcr = transcript(audio_path)
+    from_gemin_json = gemini(transcr)
     return from_gemin_json
     
