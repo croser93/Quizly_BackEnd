@@ -11,21 +11,15 @@ class RegistrationView(APIView):
     Register a new user account.
 
     Endpoints:
-    - POST   /api/registration/ - Create a new user account
+    - POST   /api/register/ - Create a new user account
     """
     permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = RegisstrationSerializer(data=request.data)
 
-        data = {}
         if serializer.is_valid():
-            save_account = serializer.save()
-            data = {
-                'username' : save_account.username,
-                'email' : save_account.email,
-                'user_id' : save_account.pk
-            }
+            serializer.save()
         else:
             return Response(serializer.errors, status=400) 
         return Response({"detail": "User created successfully!"}, status=201)
@@ -92,9 +86,9 @@ class RefreshCookieView(TokenRefreshView):
         if refresh is None:
             return Response({'detail':'Refresh token invalid or missing.'}, status=status.HTTP_401_UNAUTHORIZED)
         request.data['refresh'] = refresh
-        accsess = super().post(request)
-        accsess_token = accsess.data['access']
+        access = super().post(request)
+        access_token = access.data['access']
 
         response = Response({'detail': 'Token refreshed'})
-        response.set_cookie('access_token', accsess_token, httponly=True)
+        response.set_cookie('access_token', access_token, httponly=True)
         return response
