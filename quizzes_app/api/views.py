@@ -30,24 +30,28 @@ class QuizzesView(APIView):
         if serializer.is_valid():
 
             try:
-                try:
-                    audio_path = download_audio(serializer.validated_data['url'])
-                except Exception:
-                    raise Exception("Error creating the quiz")
+                audio_path = download_audio(serializer.validated_data['url'])
+            except:
+                return Response({'error':"Error creating the quiz"}, status=400)
 
-                quiz_json = json.loads(start_quiz_chain(audio_path))
-            except Exception as e:
-                return Response({"error": str(e)}, status=400)
-            
-            quiz = Quiz.objects.create(video_url=serializer.validated_data['url'], user=request.user, title=quiz_json['title'], description=quiz_json['description'])
-            for element in quiz_json['questions']:
-                Question.objects.create(quiz= quiz, question_title = element['question_title'], question_options = element['question_options'], answer = element['answer'])
+            quiz_json = json.loads(start_quiz_chain(audio_path))
+    
+            quiz = self.create_Quiz(serializer.validated_data['url'], request, quiz_json)
             quiz_serializer = QuizSerializer(quiz)
-            print(quiz_serializer.data)
+
             return Response(quiz_serializer.data, status=201)
         else:
             return Response({"error": "Invalid URL or request data."}, status=400)
-        
+
+    def create_Quiz(self, url, request, quiz_json):
+        quiz =  Quiz.objects.create(video_url=url, user=request.user, title=quiz_json['title'], description=quiz_json['description'])
+        self.create_Question(quiz,quiz_json)
+        return quiz
+
+    def create_Question(self, quiz, quiz_json):
+        for element in quiz_json['questions']:
+            Question.objects.create(quiz= quiz, question_title = element['question_title'], question_options = element['question_options'], answer = element['answer'])
+
 class QuizzesDetailView(APIView):
     """
     Retrieve, update or delete a single quiz owned by the authenticated user.
