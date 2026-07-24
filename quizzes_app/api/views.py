@@ -24,7 +24,6 @@ class QuizzesView(APIView):
         serializer = QuizSerializer(quiz, many=True)
         return Response(serializer.data)
 
-
     def post(self, request):
         serializer = URLSerializer(data=request.data)
         if serializer.is_valid():
@@ -32,13 +31,11 @@ class QuizzesView(APIView):
             try:
                 audio_path = download_audio(serializer.validated_data['url'])
             except:
-                return Response({'error':"Error creating the quiz"}, status=400)
+                return Response({'error':"cannot download the URL."}, status=400)
 
             quiz_json = json.loads(start_quiz_chain(audio_path))
-    
             quiz = self.create_Quiz(serializer.validated_data['url'], request, quiz_json)
             quiz_serializer = QuizSerializer(quiz)
-            print(quiz_serializer.data)
             return Response(quiz_serializer.data, status=201)
         else:
             return Response({"error": "Invalid URL or request data."}, status=400)

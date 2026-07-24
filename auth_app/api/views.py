@@ -13,6 +13,7 @@ class RegistrationView(APIView):
     Endpoints:
     - POST   /api/register/ - Create a new user account
     """
+    
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -56,7 +57,7 @@ class LogoutView(APIView):
     Endpoints:
     - POST   /api/logout/ - Blacklist the refresh token and clear auth cookies
     """
-    
+
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
