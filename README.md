@@ -80,7 +80,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-Create a `.env` file in the project root and add the generated key together with your Gemini API key:
+Create a `.env` file  or use the `.env.example ` and delete `.example`in the project root and add the generated key together with your Gemini API key:
 
 ```env
 SECRET_KEY='your_generated_key_here'
