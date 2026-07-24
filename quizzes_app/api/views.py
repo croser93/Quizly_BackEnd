@@ -43,6 +43,7 @@ class QuizzesView(APIView):
             return Response(quiz_serializer.data, status=201)
         else:
             return Response({"error": "Ungültige URL oder Anfragedaten."}, status=400)
+        
 class QuizzesDetailView(APIView):
     """
     Retrieve, update or delete a single quiz owned by the authenticated user.

@@ -3,7 +3,6 @@ from rest_framework.permissions import  AllowAny, IsAuthenticated
 from .serializer import RegisstrationSerializer, LoginSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import (TokenRefreshView)
 
@@ -63,6 +62,7 @@ class LogoutView(APIView):
     Endpoints:
     - POST   /api/logout/ - Blacklist the refresh token and clear auth cookies
     """
+    
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
