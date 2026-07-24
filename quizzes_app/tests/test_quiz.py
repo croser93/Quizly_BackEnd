@@ -50,7 +50,7 @@ class QuizTest(APITestCase):
         self.client.cookies['access_token'] = str(RefreshToken.for_user(self.user).access_token)
 
         url = reverse("quizzes")
-        data = {"url": "https://www.youtube.com/watch?v=i3a7B65b6w8"}
+        data = {"url": "https://www.youtube.com/watch?v=V2d1cPdBTUo"}
 
         response = self.client.post(url, data)
 
