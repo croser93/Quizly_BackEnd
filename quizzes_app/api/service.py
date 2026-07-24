@@ -13,7 +13,6 @@ def download_audio(url):
         "outtmpl": MEDIA_DIR + "/%(id)s.%(ext)s",
         "quiet": True,
         "noplaylist": True,
-        # "cookiesfrombrowser": ("chrome",),
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)

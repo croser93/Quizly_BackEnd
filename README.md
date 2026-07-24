@@ -61,8 +61,8 @@ pip install -r requirements.txt
 ```
 
 ```bash
-# 6. Create a .env file in the project root and add your Gemini API key
-# GEMINI_API_KEY=your_gemini_api_key_here
+# 6. Generate a Django secret key
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
 ```bash
@@ -80,6 +80,12 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+Create a `.env` file in the project root and add the generated key together with your Gemini API key:
+
+```env
+SECRET_KEY='your_generated_key_here'
+GEMINI_API_KEY='your_gemini_api_key_here'
+```
 ## Project Structure
 
 ```
